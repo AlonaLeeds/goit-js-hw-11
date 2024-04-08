@@ -1,10 +1,9 @@
 import './css/styles.css';
 import NewsApiService from './js/pixabay-api';
-import { renderImages } from './js/render-functions';
+import { lightbox } from './js/render-functions';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
-   
   searchForm: document.querySelector('.search-form'),
   galleryContainer: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
@@ -25,9 +24,6 @@ const observer = new IntersectionObserver(onLoadMore, options);
 function onSearch(element) {
   element.preventDefault();
 
-  const searchQuery = event.currentTarget.elements.searchQuery;
-  searchQuery.value = '';
-
   refs.galleryContainer.innerHTML = '';
   newsApiService.query =
     element.currentTarget.elements.searchQuery.value.trim();
@@ -35,13 +31,16 @@ function onSearch(element) {
 
   if (newsApiService.query === '') {
     Notify.warning('Please, fill the main field');
+    
     return;
   }
 
   isShown = 0;
   fetchGallery();
   onRenderGallery(hits);
+ 
 }
+ searchForm.reset();
 
 function onLoadMore() {
   newsApiService.incrementPage();
@@ -115,5 +114,5 @@ function onRenderGallery(elements) {
     )
     .join('');
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
-  renderImages.refresh();
+  lightbox.refresh();
 }
