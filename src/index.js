@@ -1,9 +1,10 @@
 import './css/reset.css';
 import NewsApiService from './js/pixabay-api';
-import { lightbox } from './js/render-functions';
+import { renderImages } from './js/render-functions';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
+   
   searchForm: document.querySelector('.search-form'),
   galleryContainer: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
@@ -111,5 +112,5 @@ function onRenderGallery(elements) {
     )
     .join('');
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
+  renderImages.refresh();
 }
