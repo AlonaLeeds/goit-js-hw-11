@@ -25,6 +25,9 @@ const observer = new IntersectionObserver(onLoadMore, options);
 function onSearch(element) {
   element.preventDefault();
 
+  const searchQuery = event.currentTarget.elements.searchQuery;
+  searchQuery.value = '';
+
   refs.galleryContainer.innerHTML = '';
   newsApiService.query =
     element.currentTarget.elements.searchQuery.value.trim();
