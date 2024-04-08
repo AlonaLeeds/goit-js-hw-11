@@ -39,8 +39,8 @@ body {
     rgba(255, 25, 25, 1) 98%
   );
   animation: gradient 15s ease infinite;
-  background-size: 400% 400%;
-  background-attachment: fixed;
+  /* background-size: 400% 400%; */
+  /* background-attachment: fixed; */
 }
 
 @keyframes gradient {
@@ -126,12 +126,12 @@ h4,
 h5,
 h6,
 p {
-  margin: 0;
+  margin: 10px;
   padding: 0;
 }
 
 .container {
-  width: 1400px;
+  width: 100%;
   margin: 0 auto;
   margin-top: 110px;
 }
@@ -218,3 +218,30 @@ p {
 .photo-card:focus {
   box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.5);
 }
+
+.info {
+  display: flex;
+  gap: 15px;
+
+}
+.load-more {
+  width: 160px;
+  height: 40px;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: black;
+  background-color: gainsboro;
+}
+
+.load-more:hover,
+.load-more:focus {
+    color: black;
+    background-color: rgba(255, 255, 126, 1);
+  }
