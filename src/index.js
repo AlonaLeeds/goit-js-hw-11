@@ -1,4 +1,4 @@
-import './css/reset.css';
+import './css/styles.css';
 import NewsApiService from './js/pixabay-api';
 import { renderImages } from './js/render-functions';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
