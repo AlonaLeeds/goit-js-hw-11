@@ -86,6 +86,8 @@ async function fetchGallery() {
     } else {
       Notify.info("We're sorry, but you've reached the end of search results.");
     }
+
+    searchInput.value = '';
   } catch (error) {
     errorMessage(error.message);
   } finally {
