@@ -140,7 +140,9 @@ p {
 
 }
 
-
+.loader{
+  height: auto;
+}
 .container {
   width: 360px;
   margin: 0 auto;
@@ -264,3 +266,23 @@ p {
     color: black;
     background-color: rgba(255, 255, 126, 1);
   }
+
+  .photo-img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+/* .info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+} */
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
