@@ -29,8 +29,6 @@ const observer = new IntersectionObserver(onLoadMore, options);
 function onSearch(element) {
   element.preventDefault();
 
-  // const searchQuery = element.currentTarget.elements.searchQuery;
-  // searchQuery.value = '';
   
 
   refs.galleryContainer.innerHTML = '';
@@ -40,8 +38,8 @@ function onSearch(element) {
 
   if (newsApiService.query === '') {
      errorMessage(`Please fill out the input field!`);
-        searchForm.reset();
-    // Notify.warning('Please, fill the main field');
+        refs.searchForm.reset();
+    Notify.warning('Please, fill the main field');
     
     return;
   }
