@@ -1,6 +1,11 @@
 import './css/styles.css';
+
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+
 import NewsApiService from './js/pixabay-api';
 import { lightbox } from './js/render-functions';
+
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = {
@@ -24,13 +29,19 @@ const observer = new IntersectionObserver(onLoadMore, options);
 function onSearch(element) {
   element.preventDefault();
 
+  // const searchQuery = element.currentTarget.elements.searchQuery;
+  // searchQuery.value = '';
+  
+
   refs.galleryContainer.innerHTML = '';
   newsApiService.query =
     element.currentTarget.elements.searchQuery.value.trim();
   newsApiService.resetPage();
 
   if (newsApiService.query === '') {
-    Notify.warning('Please, fill the main field');
+     errorMessage(`Please fill out the input field!`);
+        searchForm.reset();
+    // Notify.warning('Please, fill the main field');
     
     return;
   }
@@ -40,7 +51,7 @@ function onSearch(element) {
   onRenderGallery(hits);
  
 }
- searchForm.reset();
+
 
 function onLoadMore() {
   newsApiService.incrementPage();
@@ -55,9 +66,11 @@ async function fetchGallery() {
   isShown += hits.length;
 
   if (!hits.length) {
-    Notify.failure(
-      `Sorry, there are no images matching your search query. Please try again.`
-    );
+
+    errorMessage(`Sorry, there are no images matching your search query. Please try again!`)
+    // Notify.failure(
+    //   `Sorry, there are no images matching your search query. Please try again.`
+    // );
     refs.loadMoreBtn.classList.add('is-hidden');
     return;
   }
@@ -115,4 +128,23 @@ function onRenderGallery(elements) {
     .join('');
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
+}
+
+
+
+const iziToastParam = {
+    title: '',    
+    position: 'topRight',
+    backgroundColor: '#ef4040',
+    messageColor: '#fff',
+    titleColor: '#fff',
+    timeout: 3000,
+    pauseOnHover: false, 
+}
+
+function errorMessage(message) {
+    iziToast.error({
+        ...iziToastParam,
+        message: `${message}`,
+    })
 }
