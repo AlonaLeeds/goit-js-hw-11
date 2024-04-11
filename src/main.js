@@ -66,18 +66,18 @@ function handlerSearch(event) {
 }
 
 const iziToastParam = {
-    title: '',    
-    position: 'topRight',
-    backgroundColor: '#ef4040',
-    messageColor: '#fff',
-    titleColor: '#fff',
-    timeout: 3000,
-    pauseOnHover: false, 
-}
+  title: '',    
+  position: 'topRight',
+  backgroundColor: '#ef4040',
+  messageColor: '#fff',
+  titleColor: '#fff',
+  timeout: 3000,
+  pauseOnHover: false, 
+};
 
 function errorMessage(message) {
-    iziToast.error({
-        ...iziToastParam,
-        message: `${message}`,
-    })
+  iziToast.error({
+    ...iziToastParam,
+    message: `${message}`,
+  });
 }
