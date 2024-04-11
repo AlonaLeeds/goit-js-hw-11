@@ -1,54 +1,18 @@
-import axios from 'axios';
+const API_KEY = "43236176-8efbdba212834d112cbf0fa21";
+const BASE_URL = 'https://pixabay.com/api/?';
 
-export default class NewsApiService {
-  constructor() {
-    this.searchQuery = '';
-    this.page = 1;
-    this.PER_PAGE = 40;
-  }
-  async fetchGallery() {
-    const axiosOptions = {
-      method: 'get',
-      url: 'https://pixabay.com/api/',
-      params: {
-        key: '43218628-434600724cd02d3e35d2dc910',
-        q: `${this.searchQuery}`,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: true,
-        page: `${this.page}`,
-        per_page: `${this.PER_PAGE}`,
-      },
-    };
-    try {
-      const response = await axios(axiosOptions);
+export function fetchImages(searchValue) {
+  const SEARCH_PARAMS = new URLSearchParams({
+    key: API_KEY,
+    q: searchValue,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+  });
 
-      const data = response.data;
-
-      this.incrementPage();
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  incrementPage() {
-    this.page += 1;
-  }
-
-  resetPage() {
-    this.page = 1;
-  }
-
-  resetEndOfHits() {
-    this.endOfHits = false;
-  }
-
-  get query() {
-    return this.searchQuery;
-  }
-
-  set query(newQuery) {
-    this.searchQuery = newQuery;
-  }
+    return fetch(`${BASE_URL}${SEARCH_PARAMS}`)
+        .then(response => {
+    if (!response.ok) throw new Error(response.statusText);
+    return response.json();
+  });
 }

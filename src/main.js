@@ -1,135 +1,69 @@
-import './css/styles.css';
-
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import NewsApiService from './js/pixabay-api';
-import { lightbox } from './js/render-functions';
+import { fetchImages } from './js/pixabay-api';
+import { getGallery } from './js/render-functions.js';
 
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import './css/styles.css';
 
-const refs = {
-  searchForm: document.querySelector('.search-form'),
-  galleryContainer: document.querySelector('.gallery'),
-  loadMoreBtn: document.querySelector('.load-more'),
-};
-let isShown = 0;
-const newsApiService = new NewsApiService();
+const searchForm = document.querySelector('.search-form');
+const input = document.querySelector('.search-form__input');
+const gallery = document.querySelector('.gallery');
+const loader = document.querySelector('.preloader');
 
-refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
-const options = {
-  rootMargin: '50px',
-  root: null,
-  threshold: 0.3,
-};
-const observer = new IntersectionObserver(onLoadMore, options);
+searchForm.addEventListener('submit', handlerSearch);
 
-function onSearch(element) {
-  element.preventDefault();
 
+//loader
+
+function showLoader() {
+    loader.classList.remove('is-hidden');
+}
+
+function hideLoader() {
+    loader.classList.add('is-hidden');
+}
+
+
+function handlerSearch(event) {
+    event.preventDefault();
+  gallery.innerHTML = '';
   
-
-  refs.galleryContainer.innerHTML = '';
-  newsApiService.query =
-    element.currentTarget.elements.searchQuery.value.trim();
-  newsApiService.resetPage();
-
-  if (newsApiService.query === '') {
-     errorMessage(`Please fill out the input field!`);
-        refs.searchForm.reset();
-    Notify.warning('Please, fill the main field');
+  showLoader(); //loader
     
-    return;
-  }
+    loader.classList.remove('is-hidden');
 
-  isShown = 0;
-  fetchGallery();
-  onRenderGallery(hits);
- 
+    const inputSearchValue = input.value.trim();
+
+    if (inputSearchValue === '') {
+        errorMessage(`Please fill out the input field!`);
+        searchForm.reset();
+
+        loader.classList.add('is-hidden');
+
+        return;            
+    }
+
+    fetchImages(inputSearchValue)
+        .then(data => {            
+            if (data.hits.length === 0) {
+                errorMessage(`Sorry, there are no images matching your search query. Please try again!`);
+                return;
+            }
+            getGallery(gallery, data.hits);            
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+
+            loader.classList.add('is-hidden');
+            hideLoader();
+            searchForm.reset(); 
+        });
 }
-
-
-function onLoadMore() {
-  newsApiService.incrementPage();
-  fetchGallery();
-}
-
-async function fetchGallery() {
-  refs.loadMoreBtn.classList.add('is-hidden');
-
-  const result = await newsApiService.fetchGallery();
-  const { hits, total } = result;
-  isShown += hits.length;
-
-  if (!hits.length) {
-
-    errorMessage(`Sorry, there are no images matching your search query. Please try again!`)
-    // Notify.failure(
-    //   `Sorry, there are no images matching your search query. Please try again.`
-    // );
-    refs.loadMoreBtn.classList.add('is-hidden');
-    return;
-  }
-
-  onRenderGallery(hits);
-  isShown += hits.length;
-
-  if (isShown < total) {
-    Notify.success(`Hooray! We found ${total} images !!!`);
-    refs.loadMoreBtn.classList.remove('is-hidden');
-  }
-
-  if (isShown >= total) {
-    Notify.info("We're sorry, but you've reached the end of search results.");
-  }
-}
-
-function onRenderGallery(elements) {
-  const markup = elements
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<div class="photo-card">
-    <a href="${largeImageURL}">
-      <img class="photo-img" src="${webformatURL}" alt="${tags}" loading="lazy" />
-    </a>
-    <div class="info">
-      <p class="info-item">
-        <b>Likes</b>
-        ${likes}
-      </p>
-      <p class="info-item">
-        <b>Views</b>
-        ${views}
-      </p>
-      <p class="info-item">
-        <b>Comments</b>
-        ${comments}
-      </p>
-      <p class="info-item">
-        <b>Downloads</b>
-        ${downloads}
-      </p>
-    </div>
-    </div>`;
-      }
-    )
-    .join('');
-  refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
-}
-
-
 
 const iziToastParam = {
     title: '',    
